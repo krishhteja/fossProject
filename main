@@ -1,0 +1,46 @@
+#!/bin/bash
+
+which gdialog 2> /dev/null && DIALOG=gdialog || DIALOG=dialog
+
+pyVersion=`which python`
+if [ $pyVersion != "" ]
+then
+	echo "Python installed"
+	pid=`ps -ef | grep rest_forward | awk '{ print $2 }'`
+	echo "Rest_forward running in background with process id : "
+	echo $pid
+else
+	echo "Python not found"
+fi	
+
+cmd=($DIALOG --keep-tite --menu "Select channel :" 11 30 16)
+
+options=(1 "Unencrypted"
+	 2 "Encrypted")
+
+choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+for choice in $choices
+do
+    case $choice in
+	1)
+		disable=`curl -s -o /dev/null -I -w "%{http_code}" -X GET http://localhost:8080/channel/1/1`
+		if [ $disable -gt 199 -a $disable -lt 299 ]
+		then	
+			display="Encryption Disabled! To change option please run `basename $0` file"
+		else
+			display="Issue contacting server. Please check if server is running and try again"
+		fi
+	    ;;
+	2)
+		enable=`curl -s -o /dev/null -I -w "%{http_code}" -X GET http://localhost:8080/channel/1/2`
+		if [ $enable -gt 199 -a $enable -lt 299 ]
+		then	
+			display="Encryption Enabled! To change option please run `basename $0` file"
+		else
+			display="Issue contacting server. Please check if server is running and try again"
+		fi
+	    ;;
+    esac
+$DIALOG --msgbox "$display" 10 25		
+done
+
