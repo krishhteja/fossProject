@@ -14,9 +14,7 @@ else
 	exit
 fi
 
-dialogCheck=`which dialog`
-if [ $dialogCheck != "" ]
-then
+printDialog () {
 	cmd=($DIALOG --keep-tite --menu "Select channel :" 11 30 16)
 
 	options=(1 "Unencrypted"
@@ -47,8 +45,14 @@ then
 	    esac
 	$DIALOG --msgbox "$display" 10 25		
 	done
+}
+
+dialogCheck=`which dialog`
+if [ $dialogCheck != "" ]
+then
+	printDialog
 else
 	echo "Dialog not installed"
 	`sudo yum install -y dialog`
-	exit
+	printDialog
 fi
