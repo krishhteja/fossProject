@@ -1,0 +1,21 @@
+#!/bin/bash
+
+which fossPrj  1> /dev/null
+if [ $? -ne 0 ]; then
+	echo "fossPrj not installed"
+	exit 1
+fi
+
+while true; 
+do
+	read -p "Enter channel number to change to: " pattern
+	case ${pattern} in
+		*[!1-2]* ) 
+			printf " Please enter a number between 0 and 2 \n 1 - Unencrypted \n 2 - Encrypted \n ctrl + c to exit \n"
+			;;
+		*[1-2]* ) 
+			echo $pattern | fossPrj
+			printf "Changed to channel : $pattern \n"
+			;;
+	esac
+done
