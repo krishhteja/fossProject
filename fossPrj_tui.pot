@@ -16,12 +16,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: fossPrj:24
-msgid "Enter channel number:"
+msgid "Enter channel number to change to:"
 msgstr "ఛానల్ సంఖ్య నమోదు"
 
 #: fossPrj:28
-msgid "Result:"
-msgstr "ఫలితము:"
+msgid "Changed channel to:"
+msgstr "ఛానెల్ మార్చబడింది"
 
 #: fossPrj:28 fossPrj:31
 msgid "Continue?"

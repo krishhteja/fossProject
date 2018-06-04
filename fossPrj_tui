@@ -35,6 +35,10 @@ do
 		options=(1 "Unencrypted"
 			 2 "Encrypted")
 		choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+		if [ $? -eq 1 ]
+		then
+			end
+		fi
 		for choice in $choices
 		do
 			for choice in $choices
