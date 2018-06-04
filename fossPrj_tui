@@ -14,8 +14,14 @@ do
 			printf " Please enter a number between 0 and 2 \n 1 - Unencrypted \n 2 - Encrypted \n ctrl + c to exit \n"
 			;;
 		*[1-2]* ) 
-			echo $pattern | fossPrj
-			printf "Changed to channel : $pattern \n"
+			echo $pattern | fossPrj 1> /tmp/hello
+			val=`cat /tmp/hello`
+			if [ $val -gt 199 -a $val -lt 300 ]
+			then
+				printf "Changed to channel : $pattern \n"
+			else
+				printf "Couldn\'t contact server. Please try again later\n"
+			fi
 			;;
 	esac
 done
