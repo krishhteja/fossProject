@@ -4,11 +4,66 @@ which fossPrj  1> /dev/null
 if [ $? -ne 0 ]; then
 	echo "fossPrj not installed"
 	exit 1
+else
+	cmd=fossPrj
 fi
+
+
+HOST=localhost
+PORT=1234
+
+FILE=/tmp/fossPrj-$$
+ERROR=/tmp/fossPrj-err-$$
+
+closePrg() {
+    rm -f $FILE $ERROR
+    exit 0
+}
+
+end () {
+	exit
+}
 
 while true; 
 do
-	read -p "Enter channel number to change to: " pattern
+	if [ `basename $0` = "fossPrj_tui" ]; then
+		read -p "Enter channel number to change to: " pattern
+
+	elif [ `basename $0` = "fossPrj_gui" ]; then
+		which gdialog 1> /dev/null && DIALOG=gdialog || DIALOG=dialog 1> /dev/null
+		cmd=($DIALOG --keep-tite --menu "Select channel :" 11 30 16)
+		options=(1 "Unencrypted"
+			 2 "Encrypted")
+		choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+		for choice in $choices
+		do
+			for choice in $choices
+			do
+			case $choice in
+			[1-2])
+				mode="Encrypted"
+				if [ $choice -eq 1 ]
+				then
+					mode="Encryption disabled"
+				fi
+				echo $choice | fossPrj 1> /tmp/hello
+				val=`cat /tmp/hello`
+				if [ $val -gt 199 -a $val -lt 300 ]
+				then
+					display="Changed to channel : $mode. Would you like to continue? \n"
+				else
+					display="Couldn\'t contact server. Please try again later\n"
+				fi
+				    $DIALOG --yesno "$display" 10 25 || end	
+			;;
+		    esac
+		done
+	done		
+	elif [ `basename $0` = "fossPrj_net" ]; then
+		read -p "Switch to: " ACTION
+		CMD="nc $HOST $PORT"
+	fi
+
 	case ${pattern} in
 		*[!1-2]* ) 
 			printf " Please enter a number between 0 and 2 \n 1 - Unencrypted \n 2 - Encrypted \n ctrl + c to exit \n"
